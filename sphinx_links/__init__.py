@@ -5,8 +5,11 @@
 # Copyright © 2015 uralbash <root@uralbash.ru>
 #
 # Distributed under terms of the MIT license.
+import subprocess
+
 import docutils
 from docutils.parsers.rst.roles import set_classes
+
 from .collection import LINKS
 
 SETTING_LINKS = 'links_collection'
@@ -66,6 +69,73 @@ def external_links(links={}):
     return role
 
 
+def pypi(
+    role, rawtext, text,
+    lineno, inliner, options={}, content=[]
+):
+    """
+    Example:
+
+        See code there :pypi:`sqlalchemy_mptt`.
+    """
+    set_classes(options)
+    link = u"https://pypi.python.org/pypi/{}".format(text)
+    node = docutils.nodes.reference(
+        rawtext,
+        docutils.utils.unescape(text),
+        refuri=link,
+        **options
+    )
+    return [node], []
+
+
+def man(
+    role, rawtext, text,
+    lineno, inliner, options={}, content=[]
+):
+    """
+    Example:
+
+    See code there :man:`open`.
+    """
+    set_classes(options)
+    command = "whatis {} | ".format(text) +\
+        "grep -oP '(?<=\()[[:digit:]]+(?=\))' | tac | tail -1"
+    page = subprocess.Popen(
+        command, shell=True, stdout=subprocess.PIPE).stdout.read().strip()
+    if page and page.isdigit():
+        link = "http://manpages.ubuntu.com/manpages/{}.{}".format(text, page)
+    else:
+        link = "http://manpages.ubuntu.com/manpages/{}.1".format(text)
+    node = docutils.nodes.reference(
+        rawtext,
+        docutils.utils.unescape(text),
+        refuri=link,
+        **options
+    )
+    return [node], []
+
+
+def github(
+    role, rawtext, text,
+    lineno, inliner, options={}, content=[]
+):
+    """
+    Example:
+
+    See code there :github:`ITCase/sacrud`.
+    """
+    set_classes(options)
+    link = "https://github.com/{}".format(text)
+    node = docutils.nodes.reference(
+        rawtext,
+        docutils.utils.unescape(text),
+        refuri=link,
+        **options
+    )
+    return [node], []
+
+
 def add_role(app, env, docname):
     links = getattr(env.app.config, SETTING_LINKS, {})
     app.add_role('l', external_links(links))
@@ -74,3 +144,6 @@ def add_role(app, env, docname):
 def setup(app):
     app.add_config_value(SETTING_LINKS, {}, False)
     app.connect('env-before-read-docs', add_role)
+    app.add_role('pypi', pypi)
+    app.add_role('man', man)
+    app.add_role('github', github)
