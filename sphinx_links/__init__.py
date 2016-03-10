@@ -56,7 +56,7 @@ def external_links(links={}):
 
             See code there :l:`Nginx`.
         """
-        merged_links = dict(LINKS.items() + links.items())
+        merged_links = dict(list(LINKS.items()) + list(links.items()))
         link = CaseInsensitiveDict(merged_links)[text.lower()]
         set_classes(options)
         node = docutils.nodes.reference(
