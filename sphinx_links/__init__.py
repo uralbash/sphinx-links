@@ -99,14 +99,7 @@ def man(
     See code there :man:`open`.
     """
     set_classes(options)
-    command = "whatis {} | ".format(text) +\
-        "grep -oP '(?<=\()[[:digit:]]+(?=\))' | tac | tail -1"
-    page = subprocess.Popen(
-        command, shell=True, stdout=subprocess.PIPE).stdout.read().strip()
-    if page and page.isdigit():
-        link = "http://manpages.ubuntu.com/manpages/{}.{}".format(text, page)
-    else:
-        link = "http://manpages.ubuntu.com/manpages/{}.1".format(text)
+    link = "https://www.freebsd.org/cgi/man.cgi?query={}".format(text)
     node = docutils.nodes.reference(
         rawtext,
         docutils.utils.unescape(text),

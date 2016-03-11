@@ -8,7 +8,7 @@ README = open(os.path.join(here, 'README.rst')).read()
 
 setup(
     name='sphinx-links',
-    version='0.0.4',
+    version='0.0.5',
     description='Added external links to Sphinx project as :l:`name of link`.',
     long_description=README,
     classifiers=[
