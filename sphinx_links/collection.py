@@ -73,6 +73,7 @@ LINKS = {
 
     # packages
     'PyPi': 'https://pypi.python.org/',
+    'Nix': 'http://nixos.org/nix/',
 
     # editor
     'vi': 'http://www.vim.org',
