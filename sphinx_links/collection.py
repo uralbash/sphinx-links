@@ -66,6 +66,7 @@ LINKS = {
 
     # CVS
     'github': 'https://github.com/',
+    'gist': 'https://gist.github.com/',
 
     # GIS
     'OpenStreetMap': 'http://www.openstreetmap.org',
